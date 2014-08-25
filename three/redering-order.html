@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Three.js - render depth issues</title>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js">
+  </script>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
+        rel="stylesheet"/>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var scene = new THREE.Scene();
+
+      var camera = new THREE.PerspectiveCamera(
+          75, 
+          window.innerWidth / window.innerHeight, 
+          1, 
+          10000);
+
+      camera.position.z = 10;
+
+      var dl1 = new THREE.DirectionalLight(0xffffff, 0.7);
+      dl1.position.set(1, 1, 0);
+      scene.add(dl1);
+
+      var dl2 = new THREE.DirectionalLight(0xffffff, 0.5);
+      dl2.position.set(0, .2, 1);
+      scene.add(dl2);
+
+      var geometry = new THREE.SphereGeometry(2, 32, 32);
+      material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: true});
+
+      var mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      document.body.appendChild(renderer.domElement);
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        mesh.rotation.x += 0.002;
+        mesh.rotation.y += 0.008;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }, false);
+  </script>
+</head>
+<body> 
+
+</body>
+</html>
