@@ -3,8 +3,9 @@
 <html>
 <head>
   <title>Three.js - render depth issues</title>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js">
-  </script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
+  <script src="loaders/OBJMTLLoader.js"></script>
+  <script src="loaders/MTLLoader.js"></script>
   <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
         rel="stylesheet"/>
   <script>
@@ -27,22 +28,71 @@
       dl2.position.set(0, .2, 1);
       scene.add(dl2);
 
-      var geometry = new THREE.SphereGeometry(2, 32, 32);
-      material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: true});
+      var tex1 = THREE.ImageUtils.loadTexture( "textures/alpha1.png" );
+      tex1.wrapS = THREE.RepeatWrapping;
+      tex1.wrapT = THREE.RepeatWrapping;
+      tex1.repeat.set(6, 3);
 
-      var mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+      var material1 = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        wireframe: false,
+        shininess: 50,
+        // opacity: 0.9,
+        transparent: true,
+        alphaMap: tex1
+      });
 
-      var renderer = new THREE.WebGLRenderer();
+      var material2 = new THREE.MeshPhongMaterial({
+        color: 0xff4444,
+        wireframe: false,
+        shininess: 50,
+        // opacity: 0.9,
+        transparent: true,
+        alphaMap: tex1
+      });
+
+      var sphere1 = new THREE.SphereGeometry(2, 42, 42);
+      var sphere2 = new THREE.SphereGeometry(1.5, 42, 42);
+      var sphere3 = new THREE.SphereGeometry(1, 42, 42);
+
+      var mesh1 = new THREE.Mesh(sphere1, material1);
+      var mesh2 = new THREE.Mesh(sphere2, material2);
+      var mesh3 = new THREE.Mesh(sphere3, material1);
+      var mesh4 = null;
+      mesh1.position.x = -3;
+
+      mesh1.add(mesh2);
+      mesh1.add(mesh3);
+      scene.add(mesh1);
+
+      var loader = new THREE.OBJMTLLoader();
+      loader.load('models/spheres.obj', 'models/spheres.mtl', function (obj) {
+          obj.position.set(3, 0, 0);
+          // mesh4 = mesh;
+          scene.add(obj);
+          console.log(obj);
+      });
+
+      var renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        preserveDrawingBuffer: true
+      });
+
       renderer.setSize(window.innerWidth, window.innerHeight);
-
+      
       document.body.appendChild(renderer.domElement);
 
       function animate() {
         requestAnimationFrame(animate);
 
-        mesh.rotation.x += 0.002;
-        mesh.rotation.y += 0.008;
+        mesh1.rotation.x += 0.002;
+        mesh1.rotation.y += 0.008;
+
+        if(mesh4) {
+          mesh4.rotation.x += 0.002;
+          mesh4.rotation.y += 0.008;
+        }
 
         renderer.render(scene, camera);
       }
