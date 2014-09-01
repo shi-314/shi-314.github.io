@@ -6,6 +6,7 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
   <script src="loaders/OBJMTLLoader.js"></script>
   <script src="loaders/MTLLoader.js"></script>
+  <script src="loaders/BinaryLoader.js"></script>
   <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
         rel="stylesheet"/>
   <script>
@@ -13,12 +14,12 @@
       var scene = new THREE.Scene();
 
       var camera = new THREE.PerspectiveCamera(
-          75, 
+          35, 
           window.innerWidth / window.innerHeight, 
           1, 
-          10000);
+          500);
 
-      camera.position.z = 10;
+      camera.position.z = 12;
 
       var dl1 = new THREE.DirectionalLight(0xffffff, 0.7);
       dl1.position.set(1, 1, 0);
@@ -28,16 +29,21 @@
       dl2.position.set(0, .2, 1);
       scene.add(dl2);
 
-      var tex1 = THREE.ImageUtils.loadTexture( "textures/alpha1.png" );
+      var tex1 = THREE.ImageUtils.loadTexture('textures/decal.jpg');
       tex1.wrapS = THREE.RepeatWrapping;
       tex1.wrapT = THREE.RepeatWrapping;
       tex1.repeat.set(6, 3);
+
+      var tex2 = THREE.ImageUtils.loadTexture('textures/alpha1.png');
+      tex2.wrapS = THREE.RepeatWrapping;
+      tex2.wrapT = THREE.RepeatWrapping;
+      tex2.repeat.set(6, 3);
 
       var material1 = new THREE.MeshPhongMaterial({
         color: 0xffffff,
         wireframe: false,
         shininess: 50,
-        // opacity: 0.9,
+        opacity: 0.8,
         transparent: true,
         alphaMap: tex1
       });
@@ -48,16 +54,23 @@
         shininess: 50,
         // opacity: 0.9,
         transparent: true,
-        alphaMap: tex1
+        alphaMap: tex2
       });
 
       var sphere1 = new THREE.SphereGeometry(2, 42, 42);
       var sphere2 = new THREE.SphereGeometry(1.5, 42, 42);
       var sphere3 = new THREE.SphereGeometry(1, 42, 42);
 
-      var mesh1 = new THREE.Mesh(sphere1, material1);
-      var mesh2 = new THREE.Mesh(sphere2, material2);
       var mesh3 = new THREE.Mesh(sphere3, material1);
+      var mesh2 = new THREE.Mesh(sphere2, material2);
+      var mesh1 = new THREE.Mesh(sphere1, material1);
+
+      // set render depth for the left sphere
+
+      mesh1.renderDepth = 1;
+      mesh2.renderDepth = 2;
+      mesh3.renderDepth = 3;
+
       var mesh4 = null;
       mesh1.position.x = -3;
 
@@ -65,12 +78,17 @@
       mesh1.add(mesh3);
       scene.add(mesh1);
 
-      var loader = new THREE.OBJMTLLoader();
-      loader.load('models/spheres.obj', 'models/spheres.mtl', function (obj) {
-          obj.position.set(3, 0, 0);
-          // mesh4 = mesh;
-          scene.add(obj);
-          console.log(obj);
+      var loader = new THREE.BinaryLoader();
+      loader.load('models/bin/spheres.json', function (geometry, materials) {
+          materials[0] = material1;
+          materials[1] = material2;
+          materials[2] = material1;
+
+          var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+          mesh.position.set(3, 0, 0);
+          scene.add(mesh);
+          console.log(mesh);
+          mesh4 = mesh;
       });
 
       var renderer = new THREE.WebGLRenderer({
@@ -80,6 +98,8 @@
       });
 
       renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0xeeeeee);
+      
       
       document.body.appendChild(renderer.domElement);
 
