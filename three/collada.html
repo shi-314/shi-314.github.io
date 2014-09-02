@@ -39,6 +39,8 @@
       tex2.wrapT = THREE.RepeatWrapping;
       tex2.repeat.set(6, 3);
 
+      var clock = new THREE.Clock();
+
       var material1 = new THREE.MeshPhongMaterial({
         color: 0x44ff44,
         wireframe: false,
@@ -93,37 +95,41 @@
       
       document.body.appendChild(renderer.domElement);
 
+      				// Grid
+
+				var material = new THREE.LineBasicMaterial( { color: 0x3090f0 } );
+				var geometry = new THREE.Geometry();
+				var floor = -0.04, step = 1, size = 2;
+
+				for ( var i = 0; i <= size / step * 2; i ++ ) {
+
+					geometry.vertices.push( new THREE.Vector3( - size, floor, i * step - size ) );
+					geometry.vertices.push( new THREE.Vector3(   size, floor, i * step - size ) );
+					geometry.vertices.push( new THREE.Vector3( i * step - size, floor, -size ) );
+					geometry.vertices.push( new THREE.Vector3( i * step - size, floor,  size ) );
+
+				}
+
+				var line = new THREE.Line( geometry, material, THREE.LinePieces );
+				scene.add( line );
+
       var animation = null;
+      var play = false;
 
       var loader = new THREE.ColladaLoader();
       loader.load('animations/test.dae', function (collada) {
           console.log(collada);
 
+          // scene.add(collada.scene);
+          scene.add(collada.scene.children[0]);
+
           animation = new THREE.KeyFrameAnimation(collada.animations[0]);
 					animation.timeScale = 1;
 
-          for(var h = 0, hl = animation.hierarchy.length; h < hl; h++) {
-						var keys = animation.data.hierarchy[h].keys;
-						var sids = animation.data.hierarchy[h].sids;
-						var obj = animation.hierarchy[h];
-
-						if(keys.length && sids) {
-							for(var s = 0; s < sids.length; s++) {
-
-								var sid = sids[s];
-								var next = animation.getNextKeyWith(sid, h, 0);
-
-								if(next) next.apply(sid);
-							}
-
-							obj.matrixAutoUpdate = false;
-							animation.data.hierarchy[h].node.updateMatrix();
-							obj.matrixWorldNeedsUpdate = true;
-						}
-					}
-					animation.loop = false;
+					animation.loop = true;
 					animation.play();
-					lastTimestamp = Date.now();
+          animate();
+
           console.log(animation);
 
           // init();
@@ -133,16 +139,20 @@
 
       function animate() {
         requestAnimationFrame(animate);
+      
+        var dt = clock.getDelta();
+        
+
+        if(!animation) return;
 
         // mesh1.rotation.x += 0.002;
         // mesh1.rotation.y += 0.008;
-        if(animation)
-          animation.update(1/60);
+        animation.update(dt);
 
-        renderer.render(scene, camera);
+        // renderer.render(scene, camera);
+        renderer.render(scene, animation.hierarchy[1]);
       }
 
-      animate();
     }, false);
   </script>
   <style>
