@@ -1,0 +1,241 @@
+{
+    "accessors": {},
+    "animations": {},
+    "asset": {
+        "generator": "collada2gltf@df4892809111a8c6dbff4fab6c386a24745d344e",
+        "premultipliedAlpha": true,
+        "profile": "WebGL 1.0.2",
+        "version": 0.8
+    },
+    "bufferViews": {
+        "bufferView_2": {
+            "buffer": "Model",
+            "byteLength": 0,
+            "byteOffset": 0,
+            "target": 34963
+        },
+        "bufferView_3": {
+            "buffer": "Model",
+            "byteLength": 0,
+            "byteOffset": 0,
+            "target": 34962
+        }
+    },
+    "buffers": {},
+    "cameras": {
+        "camera_0": {
+            "perspective": {
+                "aspect_ratio": 1.5,
+                "xfov": 54.4322,
+                "zfar": 1000,
+                "znear": 0.001
+            },
+            "type": "perspective"
+        },
+        "camera_1": {
+            "orthographic": {
+                "aspect_ratio": 1.5,
+                "xmag": 15,
+                "zfar": 1000,
+                "znear": 0.001
+            },
+            "type": "orthographic"
+        },
+        "camera_2": {
+            "orthographic": {
+                "aspect_ratio": 1.5,
+                "xmag": 15,
+                "zfar": 1000,
+                "znear": 0.001
+            },
+            "type": "orthographic"
+        },
+        "camera_3": {
+            "orthographic": {
+                "aspect_ratio": 1.5,
+                "xmag": 15,
+                "zfar": 1000,
+                "znear": 0.001
+            },
+            "type": "orthographic"
+        }
+    },
+    "materials": {},
+    "meshes": {},
+    "nodes": {
+        "camera1": {
+            "camera": "camera_4",
+            "children": [],
+            "matrix": [
+                0.995592,
+                9.37616e-008,
+                0.093794,
+                -0,
+                0.0160999,
+                0.985158,
+                -0.170896,
+                0,
+                -0.0924018,
+                0.171652,
+                0.980815,
+                -0,
+                -0.00989758,
+                0.0227967,
+                0.137979,
+                1
+            ],
+            "name": "camera1"
+        },
+        "camera1_aim": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0.00291932,
+                -0.00101291,
+                0.00193189,
+                1
+            ],
+            "name": "camera1_aim"
+        },
+        "front": {
+            "camera": "camera_2",
+            "children": [],
+            "matrix": [
+                1,
+                -0,
+                0,
+                -0,
+                -0,
+                1,
+                -0,
+                0,
+                0,
+                -0,
+                1,
+                -0,
+                -0,
+                0,
+                1.001,
+                1
+            ],
+            "name": "front"
+        },
+        "pSphere1": {
+            "children": [],
+            "matrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1
+            ],
+            "name": "pSphere1"
+        },
+        "persp": {
+            "camera": "camera_0",
+            "children": [],
+            "matrix": [
+                0.707107,
+                -0,
+                -0.707107,
+                -0,
+                -0.331295,
+                0.883452,
+                -0.331295,
+                0,
+                0.624695,
+                0.468521,
+                0.624695,
+                -0,
+                0.28,
+                0.21,
+                0.28,
+                1
+            ],
+            "name": "persp"
+        },
+        "side": {
+            "camera": "camera_3",
+            "children": [],
+            "matrix": [
+                0,
+                -0,
+                -1,
+                -0,
+                -0,
+                1,
+                -0,
+                0,
+                1,
+                -0,
+                0,
+                -0,
+                1.001,
+                0,
+                -0,
+                1
+            ],
+            "name": "side"
+        },
+        "top": {
+            "camera": "camera_1",
+            "children": [],
+            "matrix": [
+                1,
+                -0,
+                0,
+                -0,
+                -0,
+                0,
+                -1,
+                0,
+                0,
+                1,
+                0,
+                -0,
+                0,
+                1.001,
+                -0,
+                1
+            ],
+            "name": "top"
+        }
+    },
+    "scene": "defaultScene",
+    "scenes": {
+        "defaultScene": {
+            "nodes": [
+                "persp",
+                "top",
+                "front",
+                "side",
+                "pSphere1",
+                "camera1",
+                "camera1_aim"
+            ]
+        }
+    },
+    "skins": {}
+}

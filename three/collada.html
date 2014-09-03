@@ -85,6 +85,7 @@
 
       mesh1.add(mesh2);
       mesh1.add(mesh3);
+      mesh1.scale.x = mesh1.scale.y = mesh1.scale.z = 0.1;
       scene.add(mesh1);
 
       var renderer = new THREE.WebGLRenderer({
@@ -110,44 +111,72 @@
       var floor = -1, step = 1, size = 20;
 
       for(var i = 0; i <= size / step * 2; i++) {
-        geometry.vertices.push( new THREE.Vector3( - size, floor, i * step - size ) );
-        geometry.vertices.push( new THREE.Vector3(   size, floor, i * step - size ) );
-        geometry.vertices.push( new THREE.Vector3( i * step - size, floor, -size ) );
-        geometry.vertices.push( new THREE.Vector3( i * step - size, floor,  size ) );
+        geometry.vertices.push(new THREE.Vector3(-size, floor, i * step - size));
+        geometry.vertices.push(new THREE.Vector3(size, floor, i * step - size));
+        geometry.vertices.push(new THREE.Vector3(i * step - size, floor, -size));
+        geometry.vertices.push(new THREE.Vector3(i * step - size, floor, size));
       }
 
       var line = new THREE.Line( geometry, material, THREE.LinePieces );
       scene.add( line );
 
-      var animation = null;
+      var animations = [];
       var play = false;
+      var animCamera;
 
       var loader = new THREE.ColladaLoader();
-      loader.load('animations/test.dae', function (collada) {
+      loader.load('animations/camera3.dae', function (collada) {
           console.log(collada);
 
-          // scene.add(collada.scene);
-          scene.add(collada.scene.children[0]);
+          collada.scene.scale.x = collada.scene.scale.y = collada.scene.scale.z = 0.05;
 
-          animation = new THREE.KeyFrameAnimation(collada.animations[0]);
-					animation.timeScale = 1;
+          // var camEye = collada.scene.getObjectByName('camEye_camera', true);
+          // camEye.scale.x = camEye.scale.y = camEye.scale.z = 3;
+          // camEye.children[0].material.color = new THREE.Color(1, 0, 0);
+          // console.log(camEye);
+          //
+          // var camTarget = collada.scene.getObjectByName('camTarget_camera', true);
+          // camTarget.scale.x = camTarget.scale.y = camTarget.scale.z = 3;
+          // camTarget.children[0].material.color = new THREE.Color(0, 1, 0);
 
-          var animCamera = animation.hierarchy[1];
-          animCamera.fov = 35;
-          animCamera.aspect = window.innerWidth / window.innerHeight;
-          console.log(animCamera);
-          animCamera.updateProjectionMatrix();
-          // camera.parent = animCamera.parent;
-          // camera.uuid = animCamera.uuid;
+          scene.add(collada.scene);
+          // scene.add(collada.scene.children[0]);
+
+          collada.animations.forEach(function (a) {
+              var animation = new THREE.KeyFrameAnimation(a);
+              animation.timeScale = 1;
+              animation.loop = false;
+
+              animation.play();
+
+              console.log(animation);
+
+              animation.hierarchy.forEach(function (object) {
+                  if(!(object instanceof THREE.PerspectiveCamera)) return;
+
+                  camera = object;
+                  // scene.remove(camera);
+                  console.log(camera);
+              });
+
+              animations.push(animation);
+          });
+          // animation = new THREE.KeyFrameAnimation(collada.animations[0]);
+					// animation.timeScale = 1;
+
+          // animCamera = animation.hierarchy[1];
+          // animCamera.fov = 35;
+          // animCamera.aspect = window.innerWidth / window.innerHeight;
+          // animCamera.updateProjectionMatrix();
 
           // console.log(animCamera);
           // animation.hierarchy[1] = camera;
 
-					animation.loop = true;
-					animation.play();
+					// animation.loop = true;
+					// animation.play();
           animate();
 
-          console.log(animation);
+          // console.log(animation);
 
           // init();
           // start();
@@ -159,15 +188,22 @@
       
         var dt = clock.getDelta();
         
-
-        if(!animation) return;
-
         // mesh1.rotation.x += 0.002;
         // mesh1.rotation.y += 0.008;
-        animation.update(dt);
 
-        // renderer.render(scene, camera);
-        renderer.render(scene, animation.hierarchy[1]);
+        animations.forEach(function (a) {
+            a.update(dt);
+        });
+
+        // camera.position.x += 1 * dt;
+        camera.position.y += 1 * dt;
+        camera.lookAt(mesh1.position);
+        // camera.rotation.y += .2 * dt;
+        renderer.render(scene, camera);
+        // animCamera.lookAt(animation.hierarchy[0].position);
+        // console.log(animation.hierarchy[1].rotation);
+        // animCamera.lookAt(new THREE.Vector3(1,0,1));
+        // renderer.render(scene, animation.hierarchy[1]);
         stats.update();
       }
 
