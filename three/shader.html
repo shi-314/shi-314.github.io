@@ -2,11 +2,32 @@
 
 <html>
 <head>
-  <title>Collada</title>
+  <title>Custom Shader</title>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
   <script src="libs/stats.min.js"></script>
   <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
         rel="stylesheet"/>
+
+  <script id="vertexShader" type="x-shader/x-vertex">
+      varying vec3 N;
+
+      void main() {
+        N = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+      }
+  </script>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    varying vec3 N;
+
+    void main()	{
+      float b = mod(gl_FragCoord.x, 50.0) > 25.0 ? 1.0 : 0.0;
+      float r = dot(N, vec3(10, 10, 10));
+      gl_FragColor = vec4(0, 0, b, 1);
+      // gl_FragColor = vec4(N, 1);
+    }
+  </script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var container = document.getElementById('container')
@@ -27,14 +48,21 @@
 
       var clock = new THREE.Clock();
 
-      var material1 = new THREE.MeshPhongMaterial({
-        color: 0x44ff44,
-        wireframe: false,
-        shininess: 50
+      // var material1 = new THREE.MeshPhongMaterial({
+      //   color: 0x44ff44,
+      //   wireframe: false,
+      //   shininess: 50
+      // });
+
+      var shaderMaterial = new THREE.ShaderMaterial({
+        uniforms: {},
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
       });
 
-      var sphere1 = new THREE.SphereGeometry(1, 42, 42);
-      var mesh1 = new THREE.Mesh(sphere1, material1);
+      var box1 = new THREE.BoxGeometry(1, 1, 1);
+      var sphere1 = new THREE.SphereGeometry(1, 32, 32);
+      var mesh1 = new THREE.Mesh(sphere1, shaderMaterial);
 
       scene.add(mesh1);
 
@@ -58,6 +86,8 @@
         requestAnimationFrame(animate);
       
         var dt = clock.getDelta();
+        mesh1.rotation.x += 0.4 * dt;
+        mesh1.rotation.y += 0.4 * dt;
         
         renderer.render(scene, camera);
         stats.update();
