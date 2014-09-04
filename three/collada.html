@@ -125,7 +125,7 @@
       var animCamera;
 
       var loader = new THREE.ColladaLoader();
-      loader.load('animations/camera3.dae', function (collada) {
+      loader.load('animations/camera2.dae', function (collada) {
           console.log(collada);
 
           collada.scene.scale.x = collada.scene.scale.y = collada.scene.scale.z = 0.05;
@@ -155,32 +155,15 @@
                   if(!(object instanceof THREE.PerspectiveCamera)) return;
 
                   camera = object;
+                  // animCamera = object;
                   // scene.remove(camera);
-                  console.log(camera);
+                  console.log(object);
               });
 
               animations.push(animation);
           });
-          // animation = new THREE.KeyFrameAnimation(collada.animations[0]);
-					// animation.timeScale = 1;
 
-          // animCamera = animation.hierarchy[1];
-          // animCamera.fov = 35;
-          // animCamera.aspect = window.innerWidth / window.innerHeight;
-          // animCamera.updateProjectionMatrix();
-
-          // console.log(animCamera);
-          // animation.hierarchy[1] = camera;
-
-					// animation.loop = true;
-					// animation.play();
           animate();
-
-          // console.log(animation);
-
-          // init();
-          // start();
-          // animate(lastTimestamp);
 			});
 
       function animate() {
@@ -196,8 +179,10 @@
         });
 
         // camera.position.x += 1 * dt;
-        camera.position.y += 1 * dt;
-        camera.lookAt(mesh1.position);
+        // camera.position.y += 1 * dt;
+        // console.log(animCamera.matrixWorld);
+        // camera.matrixWorld = animCamera.matrixWorld.clone();
+        // camera.lookAt(mesh1.position);
         // camera.rotation.y += .2 * dt;
         renderer.render(scene, camera);
         // animCamera.lookAt(animation.hierarchy[0].position);

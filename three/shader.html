@@ -1,0 +1,101 @@
+<!doctype html>
+
+<html>
+<head>
+  <title>Collada</title>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
+  <script src="libs/stats.min.js"></script>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
+        rel="stylesheet"/>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var container = document.getElementById('container')
+
+      var scene = new THREE.Scene();
+
+      var camera = new THREE.PerspectiveCamera(
+          35, 
+          window.innerWidth / window.innerHeight, 
+          1, 
+          500);
+
+      camera.position.z = 6;
+
+      var dl2 = new THREE.DirectionalLight(0xffffff, 0.7);
+      dl2.position.set(0, 0, 1);
+      scene.add(dl2);
+
+      var clock = new THREE.Clock();
+
+      var material1 = new THREE.MeshPhongMaterial({
+        color: 0x44ff44,
+        wireframe: false,
+        shininess: 50
+      });
+
+      var sphere1 = new THREE.SphereGeometry(1, 42, 42);
+      var mesh1 = new THREE.Mesh(sphere1, material1);
+
+      scene.add(mesh1);
+
+      var renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        preserveDrawingBuffer: true
+      });
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0xeeeeee);
+      
+      container.appendChild(renderer.domElement);
+
+      stats = new Stats();
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.top = '0px';
+      document.body.appendChild(stats.domElement);
+
+      function animate() {
+        requestAnimationFrame(animate);
+      
+        var dt = clock.getDelta();
+        
+        renderer.render(scene, camera);
+        stats.update();
+      }
+
+      animate();
+
+    }, false);
+  </script>
+  <style>
+    body {
+      font-size: 12px;
+      font-family: Verdana;
+    }
+
+    .hud {
+      position: absolute;
+      z-index: 100;
+      width: 100%;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    #container {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+    }
+
+    #stats {
+      z-index: 100;
+    }
+  </style>
+</head>
+<body> 
+  <div class="hud">
+    <h3>Custom Shader</h3>
+  </div>
+  <div id="container"/>
+</body>
+</html>
