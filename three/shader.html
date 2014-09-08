@@ -21,10 +21,11 @@
     varying vec3 N;
 
     void main()	{
-      float b = mod(gl_FragCoord.x, 50.0) > 25.0 ? 1.0 : 0.0;
+      // float b = mod(gl_FragCoord.x, 50.0) > 25.0 ? 1.0 : 0.0;
       float r = dot(N, vec3(10, 10, 10));
-      gl_FragColor = vec4(0, 0, b, 1);
-      // gl_FragColor = vec4(N, 1);
+
+      // gl_FragColor = vec4(b, b, b, 1);
+      gl_FragColor = vec4(N, 1);
     }
   </script>
 
@@ -62,7 +63,7 @@
 
       var box1 = new THREE.BoxGeometry(1, 1, 1);
       var sphere1 = new THREE.SphereGeometry(1, 32, 32);
-      var mesh1 = new THREE.Mesh(sphere1, shaderMaterial);
+      var mesh1 = new THREE.Mesh(sphere1, material1);
 
       scene.add(mesh1);
 
