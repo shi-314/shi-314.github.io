@@ -9,13 +9,13 @@
     },
     "bufferViews": {
         "bufferView_2": {
-            "buffer": "Model",
+            "buffer": "camera5",
             "byteLength": 0,
             "byteOffset": 0,
             "target": 34963
         },
         "bufferView_3": {
-            "buffer": "Model",
+            "buffer": "camera5",
             "byteLength": 0,
             "byteOffset": 0,
             "target": 34962
@@ -68,7 +68,7 @@
             "children": [],
             "matrix": [
                 0.28702,
-                -3.67927e-007,
+                5.157e-10,
                 -0.957924,
                 -0,
                 -0.381753,

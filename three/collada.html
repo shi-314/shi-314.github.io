@@ -3,11 +3,18 @@
 <html>
 <head>
   <title>Collada</title>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script>
+  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r68/three.min.js"></script> -->
+  <script src="http://localhost:3030/build/three.js"></script>
   <script src="libs/stats.min.js"></script>
   <script src="loaders/OBJMTLLoader.js"></script>
   <script src="loaders/MTLLoader.js"></script>
   <script src="loaders/ColladaLoader.js"></script>
+
+  <script src="http://localhost:3030/examples/js/loaders/gltf/glTF-parser.js"></script>
+  <script src="http://localhost:3030/examples/js/loaders/gltf/glTFLoader.js"></script>
+  <script src="http://localhost:3030/examples/js/loaders/gltf/glTFLoaderUtils.js"></script>
+  <script src="http://localhost:3030/examples/js/loaders/gltf/glTFAnimation.js"></script>
+
   <link href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css"
         rel="stylesheet"/>
   <script>
@@ -106,7 +113,7 @@
 
       // Grid
 
-      var material = new THREE.LineBasicMaterial( { color: 0x3090f0 } );
+      var material = new THREE.LineBasicMaterial({ color: 0x3090f0 });
       var geometry = new THREE.Geometry();
       var floor = -1, step = 1, size = 20;
 
@@ -117,54 +124,59 @@
         geometry.vertices.push(new THREE.Vector3(i * step - size, floor, size));
       }
 
-      var line = new THREE.Line( geometry, material, THREE.LinePieces );
-      scene.add( line );
+      var line = new THREE.Line(geometry, material, THREE.LinePieces);
+      scene.add(line);
 
       var animations = [];
       var play = false;
       var animCamera;
 
-      var loader = new THREE.ColladaLoader();
-      loader.load('animations/camera2.dae', function (collada) {
-          console.log(collada);
-
-          collada.scene.scale.x = collada.scene.scale.y = collada.scene.scale.z = 0.05;
-
-          // var camEye = collada.scene.getObjectByName('camEye_camera', true);
-          // camEye.scale.x = camEye.scale.y = camEye.scale.z = 3;
-          // camEye.children[0].material.color = new THREE.Color(1, 0, 0);
-          // console.log(camEye);
+      var loader = new THREE.glTFLoader(true);
+      var data = loader.load('animations/pump.gltf', function (collada) {
+          console.log('loaded');
+          // console.log(collada);
           //
-          // var camTarget = collada.scene.getObjectByName('camTarget_camera', true);
-          // camTarget.scale.x = camTarget.scale.y = camTarget.scale.z = 3;
-          // camTarget.children[0].material.color = new THREE.Color(0, 1, 0);
-
-          scene.add(collada.scene);
-          // scene.add(collada.scene.children[0]);
-
-          collada.animations.forEach(function (a) {
-              var animation = new THREE.KeyFrameAnimation(a);
-              animation.timeScale = 1;
-              animation.loop = false;
-
-              animation.play();
-
-              console.log(animation);
-
-              animation.hierarchy.forEach(function (object) {
-                  if(!(object instanceof THREE.PerspectiveCamera)) return;
-
-                  camera = object;
-                  // animCamera = object;
-                  // scene.remove(camera);
-                  console.log(object);
-              });
-
-              animations.push(animation);
-          });
-
-          animate();
+          // collada.scene.scale.x = collada.scene.scale.y = collada.scene.scale.z = 0.05;
+          //
+          // // var camEye = collada.scene.getObjectByName('camEye_camera', true);
+          // // camEye.scale.x = camEye.scale.y = camEye.scale.z = 3;
+          // // camEye.children[0].material.color = new THREE.Color(1, 0, 0);
+          // // console.log(camEye);
+          // //
+          // // var camTarget = collada.scene.getObjectByName('camTarget_camera', true);
+          // // camTarget.scale.x = camTarget.scale.y = camTarget.scale.z = 3;
+          // // camTarget.children[0].material.color = new THREE.Color(0, 1, 0);
+          //
+          // scene.add(collada.scene);
+          // // scene.add(collada.scene.children[0]);
+          //
+          // collada.animations.forEach(function (a) {
+          //     var animation = new THREE.KeyFrameAnimation(a);
+          //     animation.timeScale = 1;
+          //     animation.loop = false;
+          //
+          //     animation.play();
+          //
+          //     console.log(animation);
+          //
+          //     animation.hierarchy.forEach(function (object) {
+          //         if(!(object instanceof THREE.PerspectiveCamera)) return;
+          //
+          //         camera = object;
+          //         // animCamera = object;
+          //         // scene.remove(camera);
+          //         console.log(object);
+          //     });
+          //
+          //     animations.push(animation);
+          // });
+          //
+          // animate();
 			});
+
+      console.log(data);
+      // scene.add(data);
+      animate();
 
       function animate() {
         requestAnimationFrame(animate);
