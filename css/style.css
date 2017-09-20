@@ -239,11 +239,7 @@ section {
 	padding: 5% 0 5% 0;
 }
 
-#section-js {
-	background: #ffffff;
-}
-
-#section-cpp {
+#section-since15, #section-1314, #section-other {
 	background: #ffffff;
 }
 
